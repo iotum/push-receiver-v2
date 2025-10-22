@@ -1,4 +1,4 @@
-const request = require('request-promise');
+const axios = require('axios');
 const { SENDER_ID, SERVER_KEY } = require('./keys');
 const { register, listen } = require('../src/index');
 
@@ -57,24 +57,23 @@ describe('Parser', function() {
 });
 
 async function send(notification) {
-  const response = await request({
+  const response = await axios({
     method : 'POST',
     url    : 'https://fcm.googleapis.com/fcm/send',
-    json   : true,
-    body   : {
+    data   : {
       to           : credentials.fcm.token,
       notification : notification,
     },
     headers : { Authorization : `key=${SERVER_KEY}` },
   });
   try {
-    expect(response.success).toEqual(1);
+    expect(response.data.success).toEqual(1);
   } catch (e) {
     throw new Error(
-      `sending of notification failed: ${JSON.stringify(response)}`
+      `sending of notification failed: ${JSON.stringify(response.data)}`
     );
   }
-  return response;
+  return response.data;
 }
 
 async function receive(n) {

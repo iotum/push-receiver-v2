@@ -40,21 +40,26 @@ module.exports = class Client extends EventEmitter {
   }
 
   async connect() {
-    await Client.init();
-    await this._checkIn();
-    this._connect();
-    // can happen if the socket immediately closes after being created
-    if (!this._socket) {
-      return;
+    try {
+      await Client.init();
+      await this._checkIn();
+      this._connect();
+      // can happen if the socket immediately closes after being created
+      if (!this._socket) {
+        return;
+      }
+      await Parser.init();
+      // can happen if the socket immediately closes after being created
+      if (!this._socket) {
+        return;
+      }
+      this._parser = new Parser(this._socket);
+      this._parser.on('message', this._onMessage);
+      this._parser.on('error', this._onParserError);
+    } catch (error) {
+      this.emit('error', error);
+      this._retry();
     }
-    await Parser.init();
-    // can happen if the socket immediately closes after being created
-    if (!this._socket) {
-      return;
-    }
-    this._parser = new Parser(this._socket);
-    this._parser.on('message', this._onMessage);
-    this._parser.on('error', this._onParserError);
   }
 
   destroy() {
@@ -136,7 +141,7 @@ module.exports = class Client extends EventEmitter {
   }
 
   _onSocketClose() {
-    this.emit('disconnect')
+    this.emit('disconnect');
     this._retry();
   }
 

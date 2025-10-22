@@ -82,7 +82,7 @@
     "wrap-iife": [2, "any"],         // http://eslint.org/docs/rules/wrap-iife
     "yoda": 2,                       // http://eslint.org/docs/rules/yoda
     "no-console": 0,
-    "no-unused-vars": [2, { "ignoreRestSiblings": true }],
+    "no-unused-vars": ["warn", { "ignoreRestSiblings": true }],
     "key-spacing": [2, {
       "beforeColon": true,
       "afterColon": true,

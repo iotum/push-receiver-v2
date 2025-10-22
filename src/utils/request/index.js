@@ -1,4 +1,4 @@
-const request = require('request-promise');
+const axios = require('axios');
 const { waitFor } = require('../timeout');
 
 // In seconds
@@ -14,8 +14,13 @@ function requestWithRety(...args) {
 
 async function retry(retryCount = 0, ...args) {
   try {
-    const result = await request(...args);
-    return result;
+    const result = await axios(...args);
+    // Para respuestas de tipo arraybuffer, axios devuelve un Buffer directamente
+    // Para otros tipos, devuelve result.data como de costumbre
+    if (result.config.responseType === 'arraybuffer') {
+      return Buffer.from(result.data);
+    }
+    return result.data;
   } catch (e) {
     const timeout = Math.min(retryCount * RETRY_STEP, MAX_RETRY_TIMEOUT);
     console.error(`Request failed : ${e.message}`);

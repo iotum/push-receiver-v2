@@ -6,23 +6,21 @@ const projectID = require('yargs').argv.projectID;
 if (!apiKey) {
   console.error('Missing apiKey');
   return;
-}
-else if (!appID) {
+} else if (!appID) {
   console.error('Missing appID');
   return;
-}
-else if (!projectID) {
+} else if (!projectID) {
   console.error('Missing projectID');
   return;
 }
 
 const config = {
-  firebase: {
+  firebase : {
     apiKey,
     appID,
-    projectID
+    projectID,
   },
-  vapidKey: ''
+  vapidKey : '',
 };
 
 (async () => {

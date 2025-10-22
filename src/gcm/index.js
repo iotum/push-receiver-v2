@@ -8,8 +8,8 @@ const { toBase64 } = require('../utils/base64');
 
 // Hack to fix PHONE_REGISTRATION_ERROR #17 when bundled with webpack
 // https://github.com/dcodeIO/protobuf.js#browserify-integration
-protobuf.util.Long = Long
-protobuf.configure()
+protobuf.util.Long = Long;
+protobuf.configure();
 
 const serverKey = toBase64(Buffer.from(fcmKey));
 
@@ -39,8 +39,8 @@ async function checkIn(androidId, securityToken) {
     headers : {
       'Content-Type' : 'application/x-protobuf',
     },
-    body     : buffer,
-    encoding : null,
+    data         : buffer,
+    responseType : 'arraybuffer',
   });
   const message = AndroidCheckinResponse.decode(body);
   const object = AndroidCheckinResponse.toObject(message, {
@@ -69,6 +69,11 @@ async function doRegister({ androidId, securityToken }, appId) {
 }
 
 async function postRegister({ androidId, securityToken, body, retry = 0 }) {
+  // Convertir body a URLSearchParams para axios
+  const params = new URLSearchParams();
+  Object.keys(body).forEach(key => {
+    params.append(key, body[key]);
+  });
   const response = await request({
     url     : REGISTER_URL,
     method  : 'POST',
@@ -76,7 +81,7 @@ async function postRegister({ androidId, securityToken, body, retry = 0 }) {
       Authorization  : `AidLogin ${androidId}:${securityToken}`,
       'Content-Type' : 'application/x-www-form-urlencoded',
     },
-    form : body,
+    data : params.toString(),
   });
   if (response.includes('Error')) {
     console.warn(`Register request has failed with ${response}`);

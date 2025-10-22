@@ -1,6 +1,6 @@
 // Note: The send endpoint is deprecated and removed as of June 20, 2024: https://firebase.google.com/support/faq#fcm-depr-features
 
-const request = require('request-promise');
+const axios = require('axios');
 const argv = require('yargs').argv;
 
 const serverKey = argv.serverKey;
@@ -18,11 +18,10 @@ if (!token) {
 
 (async () => {
   try {
-    const response = await request({
+    const response = await axios({
       method : 'POST',
       url    : 'https://fcm.googleapis.com/fcm/send',
-      json   : true,
-      body   : {
+      data   : {
         to           : token,
         notification : {
           title : 'Hello world',
@@ -33,7 +32,7 @@ if (!token) {
         Authorization : `key=${serverKey}`,
       },
     });
-    console.log(response);
+    console.log(response.data);
   } catch (e) {
     console.error(e.message);
   }
