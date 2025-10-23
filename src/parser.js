@@ -1,4 +1,4 @@
-const EventEmitter = require('events');
+const { EventEmitter } = require('events');
 const path = require('path');
 const { load, BufferReader } = require('protobufjs');
 const {

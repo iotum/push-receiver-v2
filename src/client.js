@@ -1,4 +1,4 @@
-const EventEmitter = require('events');
+const { EventEmitter } = require('events');
 const Long = require('long');
 const Parser = require('./parser');
 const decrypt = require('./utils/decrypt');
