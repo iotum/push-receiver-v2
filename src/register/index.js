@@ -12,7 +12,7 @@ async function register(config) {
   const result = await registerFCM({
     ...config,
     authToken : installation.authToken.token,
-    token : subscription.token
+    token     : subscription.token,
   });
   // Need to be saved by the client
   return Object.assign({}, result, { gcm : subscription });

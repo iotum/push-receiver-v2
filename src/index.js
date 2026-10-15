@@ -1,12 +1,6 @@
 const register = require('./register');
 const Client = require('./client.js');
 
-module.exports = {
-  listen,
-  register,
-  stopListening,
-};
-
 let client;
 
 async function listen(credentials, notificationCallback) {
@@ -44,3 +38,9 @@ function stopListening() {
     client = null;
   }
 }
+
+module.exports = {
+  listen,
+  register : register.default || register,
+  stopListening,
+};
